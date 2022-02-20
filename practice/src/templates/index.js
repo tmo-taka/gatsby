@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useStaticQuery, graphql } from 'gatsby'
 import { Layout, PostCard, Pagination } from '../components/common'
 import { MetaData } from '../components/common/meta'
-import Img from 'gatsby-image'
+import { GatsbyImage } from "gatsby-plugin-image"
 
 /**
 * Main index page (home page)
@@ -17,27 +17,14 @@ import Img from 'gatsby-image'
 
 const Index = ({ data, location, pageContext }) => {
     const posts = data.allGhostPost.edges
-
-    const imgData = useStaticQuery(
-        graphql`
-            {
-            testFixed: file(relativePath: { eq: "folder.png" }) {
-                childImageSharp {
-                fixed(width: 300) {
-                    ...GatsbyImageSharpFixed
-                }
-                }
-            }
-            }
-        `
-    )
+    const staticImgs = data.file.childImageSharp
 
     return (
         <>
             <MetaData location={location} />
             <Layout isHome={true}>
                 <div className="container">
-                    <Img fixed={imgData.testFixed.childImageSharp.fixed} alt="test fixed" />
+                <GatsbyImage image={staticImgs.gatsbyImageData} alt="テスト"/>
                     <section className="post-feed">
                         {posts.map(({ node }) => (
                             // The tag below includes the markup for each post - components/common/PostCard.js
@@ -54,6 +41,7 @@ const Index = ({ data, location, pageContext }) => {
 Index.propTypes = {
     data: PropTypes.shape({
         allGhostPost: PropTypes.object.isRequired,
+        file: PropTypes.object,
     }).isRequired,
     location: PropTypes.shape({
         pathname: PropTypes.string.isRequired,
@@ -74,9 +62,18 @@ export const pageQuery = graphql`
     ) {
       edges {
         node {
-          ...GhostPostFields
-        }
+          ...GhostPostFields,
+        },
       }
+    },
+    file(
+        name: {
+            eq: "folder"
+        }
+    ){
+        childImageSharp {
+            gatsbyImageData(layout: FIXED)
+        },
     }
-  }
+}
 `

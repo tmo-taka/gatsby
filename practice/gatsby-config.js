@@ -45,8 +45,8 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: path.join(__dirname, `src`, `pages`),
                 name: `pages`,
+                path: path.join(__dirname, `src/pages`),
             },
         },
         // Setup for optimised images.
@@ -54,8 +54,8 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                path: path.join(__dirname, `src`, `images`),
                 name: `images`,
+                path: path.join(__dirname, `src/images`),
             },
         },
         `gatsby-plugin-sharp`,
@@ -66,6 +66,17 @@ module.exports = {
                 process.env.NODE_ENV === `development`
                     ? ghostConfig.development
                     : ghostConfig.production,
+        },
+        {
+            resolve: `gatsby-plugin-ghost-images`,
+            options: {
+                lookup: [
+                    {
+                        type: `GhostPost`,
+                        imgTags: [`feature_image`],
+                    }
+                ]
+            }
         },
         /**
          *  Utility Plugins
