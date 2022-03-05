@@ -13,7 +13,8 @@ import { MetaData } from '../components/common/meta'
 *
 */
 const Page = ({ data, location }) => {
-    const page = data.ghostPage
+    const page = data.ghostPage;
+    const featureImg = page.feature_image;
 
     return (
         <>
@@ -27,6 +28,7 @@ const Page = ({ data, location }) => {
             </Helmet>
             <Layout>
                 <div className="container">
+                    {featureImg ? <img src={featureImg} alt="" />: ''}
                     <article className="content">
                         <h1 className="content-title">{page.title}</h1>
 
